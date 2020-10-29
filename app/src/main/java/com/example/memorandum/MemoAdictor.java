@@ -1,8 +1,11 @@
 package com.example.memorandum;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -35,6 +38,24 @@ public class MemoAdictor extends AppCompatActivity {
     }
 
     public void deleteMemo(View view) {
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setMessage("确认要删除吗？")
+                .setPositiveButton("确定",new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Intent choosedMemo = getIntent();
+                        DBManager dbManager = new DBManager(MemoAdictor.this);
+                        dbManager.delete(choosedMemo.getIntExtra("id", -1));
+                        Toast.makeText(getApplicationContext(),"删除成功",Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(MemoAdictor.this,MainActivity.class);
+                        startActivityForResult(intent, 1);
+                    }
+                })
+                .setNegativeButton("取消",null)
+                .create();
+        dialog.show();
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.RED);
+        dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.BLACK);
 
     }
 

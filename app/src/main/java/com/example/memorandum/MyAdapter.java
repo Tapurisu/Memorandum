@@ -29,17 +29,15 @@ class ViewHolder{
         itemNotePre = (TextView) itemView.findViewById(R.id.pre);
     }
 }
-public class MyAdapter extends BaseAdapter {
 
+public class MyAdapter extends BaseAdapter {
     private List<MemoItem> memoList;
     private LayoutInflater layoutInflater;
-    private Context context;
-    private ViewHolder holder = null;
 
-    public MyAdapter(Context context,List<MemoItem> memoList) {
+    public MyAdapter(Context context, List<MemoItem> memoList) {
+        this.layoutInflater = LayoutInflater.from(context);
         this.memoList = memoList;
-        this.context = context;
-        layoutInflater = LayoutInflater.from(context);
+        //layoutInflater = LayoutInflater.from(context);
     }
 
     @Override
@@ -49,36 +47,30 @@ public class MyAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return memoList.get(position).getMemoName();
+        return memoList.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return Long.parseLong(memoList.get(position).getId()+"");
-    }
-
-    public void remove(int index){
-        memoList.remove(index);
-    }
-
-    public void refreshDataSet(){
-        notifyDataSetChanged();
+        return position;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder holder = null;
         if (convertView == null){
-            convertView = layoutInflater.inflate(R.layout.activity_main,null);
+            convertView = layoutInflater.inflate(R.layout.memo_list,null, false);
             holder = new ViewHolder(convertView);
             convertView.setTag(holder);
         }
         else {
             holder = (ViewHolder)convertView.getTag();
         }
-        holder.itemNoteTitle.setText(memoList.get(position).getMemoName());
+        MemoItem memo = memoList.get(position);
+        holder.itemNoteTitle.setText(memo.getMemoName());
         holder.itemNoteDate.setText("");
         holder.itemNoteDes.setText("");
-        holder.itemNotePre.setText(memoList.get(position).getLastModificationTime());
+        holder.itemNotePre.setText(memo.getLastModificationTime());
         return convertView;
     }
 }

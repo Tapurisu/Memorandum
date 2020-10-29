@@ -14,6 +14,8 @@
         android:layout_weight="6"
         android:hint="输入标题"
         android:textStyle="bold"
+        android:inputType="text"
+        android:lines="1"
         android:background="@android:color/white"/>
 
     <TextView

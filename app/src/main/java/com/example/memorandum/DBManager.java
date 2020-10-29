@@ -57,14 +57,14 @@ public class DBManager {
         db.close();
     }
 
-    //修改数据库记录，注意id和creationTime不修改
+    //修改数据库记录
     public void update(MemoItem item){
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
-        //values.put("id", item.getId());
+        values.put("id", item.getId());
         values.put("memoName", item.getMemoName());
         values.put("memoContent", item.getMemoContent());
-        //values.put("creationTime", item.getCreationTime());
+        values.put("creationTime", item.getCreationTime());
         values.put("lastModificationTime", item.getLastModificationTime());
         db.update(TBNAME, values, "id=?", new String[]{String.valueOf(item.getId())});
         db.close();

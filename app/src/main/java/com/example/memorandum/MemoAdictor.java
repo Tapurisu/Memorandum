@@ -10,6 +10,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class MemoAdictor extends AppCompatActivity {
     private final String TAG = "MemoAdictor";
     @Override
@@ -19,7 +22,8 @@ public class MemoAdictor extends AppCompatActivity {
 
         Intent choosedMemo = getIntent();
 
-        EditText memoNameEditText = findViewById(R.id.memoNameEditText), memoContentEditText = findViewById(R.id.memoContentEditText);
+        EditText memoNameEditText = findViewById(R.id.memoNameEditText),
+                memoContentEditText = findViewById(R.id.memoContentEditText);
         TextView lastModificationTime = findViewById(R.id.LMTTextView);
         memoNameEditText.setText(choosedMemo.getStringExtra("memoName"));
         memoContentEditText.setText(choosedMemo.getStringExtra("memoContent"));
@@ -35,6 +39,19 @@ public class MemoAdictor extends AppCompatActivity {
     }
 
     public void saveMemo(View view) {
-
+        Intent choosedMemo = getIntent();
+        EditText memoNameEditText = findViewById(R.id.memoNameEditText),
+                memoContentEditText = findViewById(R.id.memoContentEditText);
+        DBManager dbManager = new DBManager(MemoAdictor.this);
+        MemoItem memo = new MemoItem();
+        memo.setId(choosedMemo.getIntExtra("id", -1));
+        memo.setMemoName(memoNameEditText.getText().toString());
+        memo.setMemoContent(memoContentEditText.getText().toString());
+        memo.setCreationTime(choosedMemo.getStringExtra("creationTime"));
+        SimpleDateFormat formatter= new SimpleDateFormat("yyyy/MM/dd HH:mm");
+        memo.setLastModificationTime(formatter.format(new Date(System.currentTimeMillis())));
+        dbManager.update(memo);
+        Intent intent = new Intent(this,MainActivity.class);
+        startActivityForResult(intent, 1);
     }
 }

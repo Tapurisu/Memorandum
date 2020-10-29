@@ -7,18 +7,36 @@
     android:background="@android:color/white"
     tools:context=".MemoAdictor">
 
+    <EditText
+        android:id="@+id/memoNameEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="6"
+        android:hint="输入标题"
+        android:textStyle="bold"
+        android:background="@android:color/white"/>
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/LMTTextView"
         android:layout_width="match_parent"
-        android:layout_height="690dp"
-        android:layout_weight="10"
-        android:text="TextView" />
+        android:layout_height="wrap_content"
+        android:layout_weight="0.1"
+        android:text="TextView"
+        android:gravity="right"/>
+
+    <EditText
+        android:id="@+id/memoContentEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="80"
+        android:hint="输入内容"
+        android:gravity="left"
+        android:background="@android:color/white"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="0.1"
         android:orientation="horizontal">
 
         <Button
@@ -28,9 +46,10 @@
             android:layout_weight="1"
             android:drawableStart="@drawable/ic_baseline_star_border_24"
             android:paddingLeft="40dp"
-            android:paddingTop="15dp"
-            android:paddingBottom="10dp"
-            android:background="#FAFAFA"/>
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:background="#FAFAFA"
+            android:onClick="starMemo"/>
 
         <Button
             android:id="@+id/deleteButton"
@@ -39,9 +58,10 @@
             android:layout_weight="1"
             android:drawableStart="@drawable/ic_outline_delete_outline_24"
             android:paddingLeft="40dp"
-            android:paddingTop="15dp"
-            android:paddingBottom="10dp"
-            android:background="#FAFAFA"/>
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:background="#FAFAFA"
+            android:onClick="deleteMemo"/>
 
         <Button
             android:id="@+id/saveButton"
@@ -50,9 +70,10 @@
             android:layout_weight="1"
             android:drawableStart="@drawable/ic_outline_check_circle_outline_24"
             android:paddingLeft="40dp"
-            android:paddingTop="15dp"
-            android:paddingBottom="10dp"
-            android:background="#FAFAFA"/>
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:background="#FAFAFA"
+            android:onClick="saveMemo"/>
     </LinearLayout>
 
 

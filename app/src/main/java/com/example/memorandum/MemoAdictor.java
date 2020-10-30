@@ -72,6 +72,7 @@ public class MemoAdictor extends AppCompatActivity {
         SimpleDateFormat formatter= new SimpleDateFormat("yyyy/MM/dd HH:mm");
         memo.setLastModificationTime(formatter.format(new Date(System.currentTimeMillis())));
         dbManager.update(memo);
+        Toast.makeText(getApplicationContext(),"保存成功",Toast.LENGTH_LONG).show();
         Intent intent = new Intent(this,MainActivity.class);
         startActivityForResult(intent, 1);
     }

@@ -73,5 +73,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     public void searchMemo(View view) {
+
+    }
+
+    public void createMemo(View view) {
+        Toast.makeText(getApplicationContext(),"新建备忘录",Toast.LENGTH_LONG).show();
     }
 }

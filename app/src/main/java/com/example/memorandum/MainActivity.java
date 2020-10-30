@@ -90,6 +90,26 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     public void createMemo(View view) {
-        Toast.makeText(getApplicationContext(),"新建备忘录",Toast.LENGTH_LONG).show();
+        MemoItem newmemo = new MemoItem();
+        DBManager dbManager = new DBManager(MainActivity.this);
+        int validID = dbManager.findValidId();
+        //Toast.makeText(getApplicationContext(),"新建备忘录ID:"+validID,Toast.LENGTH_LONG).show();
+        newmemo.setId(validID);
+        SimpleDateFormat formatter= new SimpleDateFormat("yyyy/MM/dd/ HH:mm");
+        String date_of_now = formatter.format(new Date(System.currentTimeMillis()));
+        newmemo.setMemoName("新的备忘录"+validID);
+        newmemo.setMemoContent("");
+        newmemo.setCreationTime(date_of_now);
+        newmemo.setLastModificationTime(date_of_now);
+        dbManager.add(newmemo);
+        memolist = dbManager.listAll();
+
+        Intent intent = new Intent(this,MemoAdictor.class);
+        intent.putExtra("id", validID);
+        intent.putExtra("memoName", "新的备忘录"+validID);
+        intent.putExtra("memoContent", "");
+        intent.putExtra("creationTime", date_of_now);
+        intent.putExtra("lastModificationTime", date_of_now);
+        startActivity(intent);
     }
 }

@@ -131,4 +131,26 @@ public class DBManager {
         db.close();
         return memolist;
     }
+
+    public int findValidId(){
+        int validid = -1, p;
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.query(TBNAME, null,null,null,null, null, null);
+        int idlist[] = new int[20];
+        if(cursor!=null && cursor.moveToFirst()){
+            while(cursor.moveToNext()){
+                p = cursor.getInt(cursor.getColumnIndex("ID"));
+                idlist[p] = 1;
+            }
+            cursor.close();
+        }
+        db.close();
+        for(int i=1; i<20; i++){
+            if(idlist[i]==0) {
+                validid = i;
+                break;
+            }
+        }
+        return validid;
+    }
 }

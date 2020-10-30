@@ -60,6 +60,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         MyAdapter adapter = new MyAdapter(this, list);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Toast.makeText(getApplicationContext(),"长按目标ID:"+i,Toast.LENGTH_LONG).show();
+                return true;
+            }
+        });
         final SwipeRefreshLayout swiper = findViewById(R.id.swiper);
         swiper.setColorSchemeResources(R.color.colorPrimary);
         swiper.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

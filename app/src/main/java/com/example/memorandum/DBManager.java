@@ -108,4 +108,27 @@ public class DBManager {
         db.close();
         return item;
     }
+
+    public List<MemoItem> findByName(String memoName){
+        List<MemoItem> memolist = null;
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String fuzzyQuery = "SELECT  * FROM "+TBNAME +" where memoName like '%"+memoName+"%'";
+        Cursor cursor = db.rawQuery(fuzzyQuery, null);
+        if(cursor!=null){
+            memolist = new ArrayList<MemoItem>();
+            while(cursor.moveToNext()){
+                MemoItem item = new MemoItem();
+                item.setId(cursor.getInt(cursor.getColumnIndex("ID")));
+                item.setMemoName(cursor.getString(cursor.getColumnIndex("MEMONAME")));
+                item.setMemoContent(cursor.getString(cursor.getColumnIndex("MEMOCONTENT")));
+                item.setLastModificationTime(cursor.getString(cursor.getColumnIndex("LASTMODIFICATIONTIME")));
+                item.setCreationTime(cursor.getString(cursor.getColumnIndex("CREATIONTIME")));
+
+                memolist.add(item);
+            }
+            cursor.close();
+        }
+        db.close();
+        return memolist;
+    }
 }

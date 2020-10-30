@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -31,27 +32,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        final SwipeRefreshLayout swiper = findViewById(R.id.swiper);
-        swiper.setColorSchemeResources(R.color.colorPrimary);
         listView = findViewById(R.id.list_item);
-
         DBManager dbManager = new DBManager(MainActivity.this);
         memolist = dbManager.listAll();
-        MyAdapter adapter = new MyAdapter(this, memolist);
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(this);
-
-        swiper.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        swiper.setRefreshing(false);
-                    }
-                },600);
-            }
-        });
+        inite(memolist);
     }
 
     @Override
@@ -72,8 +56,37 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         startActivity(intent);
     }
 
-    public void searchMemo(View view) {
+    public void inite(List<MemoItem> list){
+        MyAdapter adapter = new MyAdapter(this, list);
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(this);
+        final SwipeRefreshLayout swiper = findViewById(R.id.swiper);
+        swiper.setColorSchemeResources(R.color.colorPrimary);
+        swiper.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        swiper.setRefreshing(false);
+                    }
+                },600);
+            }
+        });
+    }
 
+    public void searchMemo(View view) {
+        List<MemoItem> searchResult = null;
+        EditText searchET = findViewById(R.id.searchEditText);
+        String searchName = searchET.getText().toString().trim();
+        if(searchName.length() != 0){
+            DBManager dbManager = new DBManager(MainActivity.this);
+            searchResult = dbManager.findByName(searchName);
+        }else{
+            searchResult = memolist;
+            //Toast.makeText(getApplicationContext(),"请输入备忘录名字",Toast.LENGTH_LONG).show();
+        }
+        inite(searchResult);
     }
 
     public void createMemo(View view) {

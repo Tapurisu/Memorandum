@@ -7,11 +7,13 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,12 +49,13 @@ public class MemoAdictor extends AppCompatActivity {
         memoNameEditText.setText(choosedMemo.getMemoName());
         memoContentEditText.setText(choosedMemo.getMemoContent());
         lastModificationTime.setText(choosedMemo.getLastModificationTime());
+        if(choosedMemo.getIsStar()==1){
+            ImageButton starbtn = findViewById(R.id.starButton);
+            starbtn.setImageResource(R.drawable.ic_baseline_star_24_new);
+        }
     }
 
     public void starMemo(View view) {
-        Button btn = (Button) findViewById(R.id.starButton);
-
-
         DBManager db = new DBManager(MemoAdictor.this);
         db.changeStarStatus(choosedMemo.getId());
 
@@ -60,11 +63,13 @@ public class MemoAdictor extends AppCompatActivity {
         Intent broadcast = new Intent();
         broadcast.setAction("action.refreshMain");
         sendBroadcast(broadcast);
-
+        ImageButton starbtn = findViewById(R.id.starButton);
         if(choosedMemo.getIsStar() == 1){
+            starbtn.setImageResource(R.drawable.ic_baseline_star_border_24);
             Toast.makeText(getApplicationContext(),"取消收藏",Toast.LENGTH_LONG).show();
         }
         else {
+            starbtn.setImageResource(R.drawable.ic_baseline_star_24_new);
             Toast.makeText(getApplicationContext(),"收藏成功",Toast.LENGTH_LONG).show();
         }
     }

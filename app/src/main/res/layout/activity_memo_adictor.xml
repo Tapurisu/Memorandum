@@ -41,37 +41,41 @@
         android:layout_weight="0.1"
         android:orientation="horizontal">
 
-        <Button
+        <ImageButton
             android:id="@+id/starButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:drawableStart="@drawable/ic_baseline_star_border_24"
-            android:paddingLeft="40dp"
+            android:src="@drawable/ic_baseline_star_border_24"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
             android:background="#FAFAFA"
             android:onClick="starMemo"/>
 
-        <Button
+
+        <ImageButton
             android:id="@+id/deleteButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:drawableStart="@drawable/ic_outline_delete_outline_24"
-            android:paddingLeft="40dp"
+            android:src="@drawable/ic_outline_delete_outline_24"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
             android:background="#FAFAFA"
             android:onClick="deleteMemo"/>
 
-        <Button
+        <ImageButton
             android:id="@+id/saveButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:drawableStart="@drawable/ic_outline_check_circle_outline_24"
-            android:paddingLeft="40dp"
+            android:src="@drawable/ic_outline_check_circle_outline_24"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
             android:background="#FAFAFA"

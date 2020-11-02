@@ -9,26 +9,28 @@ public class MemoItem {
     private String memoContent;
     private String creationTime;
     private String lastModificationTime;
+    private int isStar;
 
     public MemoItem(){
         //创建备忘录时，默认标题为"新的备忘录"，内容为空，创建时间自动给定
         super();
-
         memoName = "新的备忘录";
         memoContent = "";
         SimpleDateFormat formatter= new SimpleDateFormat("yyyy/MM/dd HH:mm");
         creationTime = formatter.format(new Date(System.currentTimeMillis()));
         lastModificationTime = "";
+        isStar = 0;
     }
 
     public MemoItem(int id){
         //传入参数id创建备忘录
         super();
         this.id = id;
-        memoName = "新的备忘录";
+        memoName = "新的备忘录" + id;
         memoContent = "";
         SimpleDateFormat formatter= new SimpleDateFormat("yyyy/MM/dd HH:mm");
         creationTime = formatter.format(new Date(System.currentTimeMillis()));
+        isStar = 0;
     }
 
     public int getId() {
@@ -71,4 +73,11 @@ public class MemoItem {
         this.lastModificationTime = lastModificationTime;
     }
 
+    public int getIsStar() {
+        return isStar;
+    }
+
+    public void setIsStar(int isStar) {
+        this.isStar = isStar;
+    }
 }

@@ -26,6 +26,7 @@ public class DBManager {
         values.put("memoContent", item.getMemoContent());
         values.put("creationTime", item.getCreationTime());
         values.put("lastModificationTime", item.getLastModificationTime());
+        values.put("isStar", item.getIsStar());
         db.insert(TBNAME, null, values);
         db.close();
     }
@@ -39,6 +40,7 @@ public class DBManager {
             values.put("memoContent", item.getMemoContent());
             values.put("creationTime", item.getCreationTime());
             values.put("lastModificationTime", item.getLastModificationTime());
+            values.put("isStar", item.getIsStar());
             db.insert(TBNAME, null, values);
         }
         db.close();
@@ -66,6 +68,7 @@ public class DBManager {
         values.put("memoContent", item.getMemoContent());
         values.put("creationTime", item.getCreationTime());
         values.put("lastModificationTime", item.getLastModificationTime());
+        values.put("isStar", item.getIsStar());
         db.update(TBNAME, values, "id=?", new String[]{String.valueOf(item.getId())});
         db.close();
     }
@@ -84,6 +87,7 @@ public class DBManager {
                 item.setMemoContent(cursor.getString(cursor.getColumnIndex("MEMOCONTENT")));
                 item.setLastModificationTime(cursor.getString(cursor.getColumnIndex("LASTMODIFICATIONTIME")));
                 item.setCreationTime(cursor.getString(cursor.getColumnIndex("CREATIONTIME")));
+                item.setIsStar(cursor.getInt(cursor.getColumnIndex("ISSTAR")));
 
                 memolist.add(item);
             }
@@ -103,6 +107,7 @@ public class DBManager {
             item.setMemoContent(cursor.getString(cursor.getColumnIndex("MEMOCONTENT")));
             item.setLastModificationTime(cursor.getString(cursor.getColumnIndex("LASTMODIFICATIONTIME")));
             item.setCreationTime(cursor.getString(cursor.getColumnIndex("CREATIONTIME")));
+            item.setIsStar(cursor.getInt(cursor.getColumnIndex("ISSTAR")));
             cursor.close();
         }
         db.close();
@@ -123,7 +128,7 @@ public class DBManager {
                 item.setMemoContent(cursor.getString(cursor.getColumnIndex("MEMOCONTENT")));
                 item.setLastModificationTime(cursor.getString(cursor.getColumnIndex("LASTMODIFICATIONTIME")));
                 item.setCreationTime(cursor.getString(cursor.getColumnIndex("CREATIONTIME")));
-
+                item.setIsStar(cursor.getInt(cursor.getColumnIndex("ISSTAR")));
                 memolist.add(item);
             }
             cursor.close();
@@ -133,11 +138,11 @@ public class DBManager {
     }
 
     public int findValidId(){
-        int validid = -1, p;
+        int validid = 0, p;
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.query(TBNAME, null,null,null,null, null, null);
-        int idlist[] = new int[20];
-        if(cursor!=null && cursor.moveToFirst()){
+        int idlist[] = new int[50];
+        if(cursor!=null){
             while(cursor.moveToNext()){
                 p = cursor.getInt(cursor.getColumnIndex("ID"));
                 idlist[p] = 1;
@@ -145,12 +150,19 @@ public class DBManager {
             cursor.close();
         }
         db.close();
-        for(int i=1; i<20; i++){
+        for(int i=0; i<50; i++){
             if(idlist[i]==0) {
                 validid = i;
                 break;
             }
         }
         return validid;
+    }
+
+    public void changeStarStatus(int id){
+        MemoItem item = findById(id);
+        int status = item.getIsStar();
+        item.setIsStar(1 - status);
+        update(item);
     }
 }

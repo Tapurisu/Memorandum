@@ -3,12 +3,14 @@ package com.example.memorandum;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,61 +18,93 @@ import android.widget.Toast;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import cn.refactor.lib.colordialog.ColorDialog;
+
 public class MemoAdictor extends AppCompatActivity {
     private final String TAG = "MemoAdictor";
+    public MemoItem choosedMemo = new MemoItem();
+
+    public MemoItem getMemo(){
+        Intent intent = getIntent();
+        MemoItem memo = new MemoItem();
+        memo.setId(intent.getIntExtra("id", -1));
+        memo.setMemoName(intent.getStringExtra("memoName"));
+        memo.setMemoContent(intent.getStringExtra("memoContent"));
+        memo.setCreationTime(intent.getStringExtra("creationTime"));
+        memo.setLastModificationTime(intent.getStringExtra("lastModificationTime"));
+        memo.setIsStar(intent.getIntExtra("isStar", 0));
+        return memo;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_memo_adictor);
-
-        Intent choosedMemo = getIntent();
-
+        choosedMemo = getMemo();
         EditText memoNameEditText = findViewById(R.id.memoNameEditText),
                 memoContentEditText = findViewById(R.id.memoContentEditText);
         TextView lastModificationTime = findViewById(R.id.LMTTextView);
-        memoNameEditText.setText(choosedMemo.getStringExtra("memoName"));
-        memoContentEditText.setText(choosedMemo.getStringExtra("memoContent"));
-        lastModificationTime.setText(choosedMemo.getStringExtra("lastModificationTime"));
+        memoNameEditText.setText(choosedMemo.getMemoName());
+        memoContentEditText.setText(choosedMemo.getMemoContent());
+        lastModificationTime.setText(choosedMemo.getLastModificationTime());
     }
 
     public void starMemo(View view) {
+        Button btn = (Button) findViewById(R.id.starButton);
 
+
+        DBManager db = new DBManager(MemoAdictor.this);
+        db.changeStarStatus(choosedMemo.getId());
+
+        //广播通知MainActivity刷新
+        Intent broadcast = new Intent();
+        broadcast.setAction("action.refreshMain");
+        sendBroadcast(broadcast);
+
+        if(choosedMemo.getIsStar() == 1){
+            Toast.makeText(getApplicationContext(),"取消收藏",Toast.LENGTH_LONG).show();
+        }
+        else {
+            Toast.makeText(getApplicationContext(),"收藏成功",Toast.LENGTH_LONG).show();
+        }
     }
 
     public void deleteMemo(View view) {
-        AlertDialog dialog = new AlertDialog.Builder(this)
-                .setMessage("确认要删除吗？")
-                .setPositiveButton("确定",new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Intent choosedMemo = getIntent();
-                        DBManager dbManager = new DBManager(MemoAdictor.this);
-                        dbManager.delete(choosedMemo.getIntExtra("id", -1));
-                        Toast.makeText(getApplicationContext(),"删除成功",Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent(MemoAdictor.this,MainActivity.class);
-                        startActivityForResult(intent, 1);
-                    }
-                })
-                .setNegativeButton("取消",null)
-                .create();
-        dialog.show();
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.RED);
-        dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.BLACK);
-
+        ColorDialog dialog = new ColorDialog(this);
+        dialog.setContentText("确定要删除吗？");
+        dialog.setColor("#0099F2");
+        dialog.setPositiveListener("确定", new ColorDialog.OnPositiveListener() {
+            @Override
+            public void onClick(ColorDialog dialog) {
+                  Intent choosedMemo = getIntent();
+                  DBManager dbManager = new DBManager(MemoAdictor.this);
+                  dbManager.delete(choosedMemo.getIntExtra("id", -1));
+                  Toast.makeText(getApplicationContext(),"删除成功",Toast.LENGTH_LONG).show();
+                  Intent intent = new Intent(MemoAdictor.this,MainActivity.class);
+                  startActivityForResult(intent, 1);
+                  dialog.dismiss();
+            }
+        })
+        .setNegativeListener("取消", new ColorDialog.OnNegativeListener() {//取消监听
+            @Override
+            public void onClick(ColorDialog dialog) {
+                 dialog.dismiss();
+            }
+        }).show();//展示
     }
 
     public void saveMemo(View view) {
-        Intent choosedMemo = getIntent();
         EditText memoNameEditText = findViewById(R.id.memoNameEditText),
                 memoContentEditText = findViewById(R.id.memoContentEditText);
         DBManager dbManager = new DBManager(MemoAdictor.this);
         MemoItem memo = new MemoItem();
-        memo.setId(choosedMemo.getIntExtra("id", -1));
+        memo.setId(choosedMemo.getId());
         memo.setMemoName(memoNameEditText.getText().toString());
         memo.setMemoContent(memoContentEditText.getText().toString());
-        memo.setCreationTime(choosedMemo.getStringExtra("creationTime"));
+        memo.setCreationTime(choosedMemo.getCreationTime());
         SimpleDateFormat formatter= new SimpleDateFormat("yyyy/MM/dd HH:mm");
         memo.setLastModificationTime(formatter.format(new Date(System.currentTimeMillis())));
+        memo.setIsStar(choosedMemo.getIsStar());
         dbManager.update(memo);
         Toast.makeText(getApplicationContext(),"保存成功",Toast.LENGTH_LONG).show();
         Intent intent = new Intent(this,MainActivity.class);

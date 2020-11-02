@@ -1,5 +1,9 @@
 package com.example.memorandum;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +16,7 @@ import java.util.List;
 class ViewHolder{
     public ImageView itemIcon;
     public TextView itemNoteTitle;
-    public TextView itemNoteDate;
+    public ImageView itemNoteDate;
     public TextView itemNoteDes;
     public TextView itemNotePre;
     View itemView;
@@ -24,7 +28,7 @@ class ViewHolder{
         this.itemView = itemView;
         itemIcon = (ImageView) itemView.findViewById(R.id.rand_icon);
         itemNoteTitle = (TextView) itemView.findViewById(R.id.item_note_title);
-        itemNoteDate = (TextView) itemView.findViewById(R.id.item_note_date);
+        itemNoteDate = (ImageView) itemView.findViewById(R.id.item_note_date);
         itemNoteDes = (TextView) itemView.findViewById(R.id.des);
         itemNotePre = (TextView) itemView.findViewById(R.id.pre);
     }
@@ -68,7 +72,9 @@ public class MyAdapter extends BaseAdapter {
         }
         MemoItem memo = memoList.get(position);
         holder.itemNoteTitle.setText(memo.getMemoName());
-        holder.itemNoteDate.setText("");
+        if(memo.getIsStar() == 1){
+            holder.itemNoteDate.setImageResource(R.drawable.ic_baseline_star_24);
+        }
         holder.itemNoteDes.setText("");
         holder.itemNotePre.setText(memo.getLastModificationTime());
         return convertView;
